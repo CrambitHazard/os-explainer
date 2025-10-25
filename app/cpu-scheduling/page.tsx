@@ -228,7 +228,7 @@ export default function CPUScheduling() {
                 </button>
               )}
               <button onClick={runSimulation} className="btn-simulate">
-                🚀 Run Simulation
+                Run Simulation
               </button>
               <button onClick={resetSimulation} className="btn-reset">
                 Reset
