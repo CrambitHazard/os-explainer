@@ -44,20 +44,20 @@ const modules = [
     description: 'Visualize Contiguous, Linked, and Indexed file allocation',
     slug: 'file-system',
   },
+  // {
+  //   id: 8,
+  //   title: 'Disk Scheduling',
+  //   description: 'Simulate FCFS, SSTF, SCAN, C-SCAN, and LOOK algorithms',
+  //   slug: 'disk-scheduling',
+  // },
   {
     id: 8,
-    title: 'Disk Scheduling',
-    description: 'Simulate FCFS, SSTF, SCAN, C-SCAN, and LOOK algorithms',
-    slug: 'disk-scheduling',
-  },
-  {
-    id: 9,
     title: 'I/O & Device Scheduling',
     description: 'Learn device queue simulation and interrupt handling',
     slug: 'io-scheduling',
   },
   {
-    id: 10,
+    id: 9,
     title: 'System Calls & OS Services',
     description: 'Interactive demonstrations of fork(), exec(), wait(), and more',
     slug: 'system-calls',
