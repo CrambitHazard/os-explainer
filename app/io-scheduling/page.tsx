@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '../components/ThemeToggle'
+import Icon from '../components/Icon'
 import { 
   IORequest, Device, Interrupt, IOMetrics, IOSchedulingAlgorithm, 
   DeviceType, InterruptPriority 
@@ -312,10 +313,10 @@ export default function IOScheduling() {
               className={`btn-control ${isRunning ? 'pause' : 'play'}`}
               disabled={requests.length === 0}
             >
-              {isRunning ? '⏸ Pause' : '▶ Start'} Simulation
+              {isRunning ? <><Icon name="pause" size={16} /> Pause</> : <><Icon name="play" size={16} /> Start</>} Simulation
             </button>
             <button onClick={reset} className="btn-reset">
-              🔄 Reset
+              <Icon name="reload" size={16} /> Reset
             </button>
             <div className="time-display">
               Time: <strong>{currentTime.toFixed(1)}s</strong>
@@ -359,9 +360,9 @@ export default function IOScheduling() {
                   onChange={(e) => setDeviceType(e.target.value as DeviceType)}
                   className="device-select"
                 >
-                  <option value="disk">💾 Disk</option>
-                  <option value="printer">🖨️ Printer</option>
-                  <option value="network">🌐 Network</option>
+                  <option value="disk">Disk</option>
+                  <option value="printer">Printer</option>
+                  <option value="network">Network</option>
                 </select>
                 <input
                   type="number"
@@ -375,10 +376,10 @@ export default function IOScheduling() {
                   onChange={(e) => setPriority(e.target.value as InterruptPriority)}
                   className="priority-select"
                 >
-                  <option value="critical">🚨 Critical</option>
-                  <option value="high">⚠️ High</option>
-                  <option value="medium">📢 Medium</option>
-                  <option value="low">📌 Low</option>
+                  <option value="critical">Critical</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
                 </select>
                 {deviceType === 'disk' && (
                   <input

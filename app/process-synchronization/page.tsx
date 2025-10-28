@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '../components/ThemeToggle'
+import Icon from '../components/Icon'
 import { SyncMechanism, PetersonState, SemaphoreState, MonitorState } from './types'
 import { scenarios } from './examples'
 import { initializePeterson, stepPeterson, isComplete as isPetersonComplete } from './simulators/petersonSimulator'
@@ -227,7 +228,7 @@ export default function ProcessSynchronization() {
             </button>
             {isComplete() && (
               <div className="completion-badge">
-                ✓ Simulation Complete
+                <Icon name="check" size={16} /> Simulation Complete
               </div>
             )}
           </div>

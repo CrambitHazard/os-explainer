@@ -1,6 +1,7 @@
 'use client'
 
 import { SystemCall } from '../types'
+import Icon from '../../components/Icon'
 
 interface Props {
   calls: SystemCall[]
@@ -10,22 +11,22 @@ interface Props {
 export default function SystemCallTrace({ calls, maxDisplay = 20 }: Props) {
   const recentCalls = calls.slice(-maxDisplay).reverse()
 
-  const getCallIcon = (type: string): string => {
-    const icons: { [key: string]: string } = {
-      fork: '🔀',
-      exec: '🔄',
-      wait: '⏳',
-      exit: '🚪',
-      open: '📂',
-      read: '📖',
-      write: '✍️',
-      close: '🔒',
-      pipe: '🔗',
-      signal: '📡',
-      malloc: '🧱',
-      free: '🗑️',
+  const getCallIcon = (type: string): JSX.Element => {
+    const iconMap: { [key: string]: string } = {
+      fork: 'fork',
+      exec: 'reload',
+      wait: 'hourglass',
+      exit: 'door',
+      open: 'folder',
+      read: 'read',
+      write: 'write',
+      close: 'lock',
+      pipe: 'pipe',
+      signal: 'signal',
+      malloc: 'memory',
+      free: 'trash',
     }
-    return icons[type] || '⚙️'
+    return <Icon name={iconMap[type] || 'settings'} size={16} />
   }
 
   const getCallColor = (type: string): string => {

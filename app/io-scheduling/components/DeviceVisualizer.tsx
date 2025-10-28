@@ -1,6 +1,7 @@
 'use client'
 
 import { Device } from '../types'
+import Icon from '../../components/Icon'
 import { deviceTypes } from '../examples'
 
 interface Props {
@@ -26,7 +27,7 @@ export default function DeviceVisualizer({ devices }: Props) {
                   <span className="device-type">{deviceInfo.name}</span>
                 </div>
                 <div className={`device-status ${device.busy ? 'busy' : 'idle'}`}>
-                  {device.busy ? '⚡ Busy' : '💤 Idle'}
+                  {device.busy ? <><Icon name="signal" size={14} /> Busy</> : <><Icon name="sleep" size={14} /> Idle</>}
                 </div>
               </div>
 

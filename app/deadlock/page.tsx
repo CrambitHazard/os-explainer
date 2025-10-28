@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '../components/ThemeToggle'
+import Icon from '../components/Icon'
 import { DetectionMethod, RAGState, BankerState, Process, Resource } from './types'
 import { ragExamples, bankerExamples } from './examples'
 import { detectCycles, buildEdgesFromState, analyzeDeadlock } from './algorithms/ragDetection'
@@ -107,9 +108,9 @@ export default function Deadlock() {
     
     if (result.granted && result.newState) {
       setBankerState(result.newState)
-      setRequestResult(`✓ ${result.reason}`)
+      setRequestResult(`success: ${result.reason}`)
     } else {
-      setRequestResult(`✗ ${result.reason}`)
+      setRequestResult(`error: ${result.reason}`)
     }
 
     // Clear message after 5 seconds
@@ -209,8 +210,12 @@ export default function Deadlock() {
             </div>
 
             {requestResult && (
-              <div className={`request-result ${requestResult.startsWith('✓') ? 'success' : 'error'}`}>
-                {requestResult}
+              <div className={`request-result ${requestResult.startsWith('success') ? 'success' : 'error'}`}>
+                {requestResult.startsWith('success') ? (
+                  <><Icon name="check" size={16} /> {requestResult.replace('success: ', '')}</>
+                ) : (
+                  <><Icon name="cross" size={16} /> {requestResult.replace('error: ', '')}</>
+                )}
               </div>
             )}
 

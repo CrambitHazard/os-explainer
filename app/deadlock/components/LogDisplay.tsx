@@ -1,6 +1,7 @@
 'use client'
 
 import { LogEntry } from '../types'
+import Icon from '../../components/Icon'
 
 interface Props {
   log: LogEntry[]
@@ -9,10 +10,10 @@ interface Props {
 export default function LogDisplay({ log }: Props) {
   const getLogIcon = (type: string) => {
     switch (type) {
-      case 'success': return '✓'
-      case 'error': return '✗'
-      case 'warning': return '⚠'
-      default: return 'ℹ'
+      case 'success': return <Icon name="check" size={14} />
+      case 'error': return <Icon name="cross" size={14} />
+      case 'warning': return <Icon name="alert-high" size={14} />
+      default: return <Icon name="alert-medium" size={14} />
     }
   }
 

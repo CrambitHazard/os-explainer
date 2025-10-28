@@ -1,6 +1,7 @@
 'use client'
 
 import { Process } from '../types'
+import Icon from '../../components/Icon'
 
 interface Props {
   processes: Process[]
@@ -28,12 +29,15 @@ export default function ProcessTree({ processes, highlightPid }: Props) {
     const { process, children, level } = node
     const isHighlighted = process.pid === highlightPid
     
-    const stateEmoji = {
-      running: '▶️',
-      ready: '⏸️',
-      waiting: '⏳',
-      terminated: '✅',
-      zombie: '👻',
+    const getStateIcon = (state: string): JSX.Element => {
+      const iconMap: { [key: string]: string } = {
+        running: 'play',
+        ready: 'pause',
+        waiting: 'hourglass',
+        terminated: 'check',
+        zombie: 'ghost',
+      }
+      return <Icon name={iconMap[state] || 'pause'} size={14} />
     }
 
     return (
@@ -44,7 +48,7 @@ export default function ProcessTree({ processes, highlightPid }: Props) {
             className="process-box"
             style={{ borderColor: process.color }}
           >
-            <span className="state-icon">{stateEmoji[process.state]}</span>
+            <span className="state-icon">{getStateIcon(process.state)}</span>
             <div className="process-info">
               <span className="process-name">{process.name}</span>
               <span className="process-pid">PID: {process.pid}</span>
@@ -84,11 +88,11 @@ export default function ProcessTree({ processes, highlightPid }: Props) {
       </div>
       <div className="state-legend">
         <div className="legend-item">
-          <span>▶️ Running</span>
-          <span>⏸️ Ready</span>
-          <span>⏳ Waiting</span>
-          <span>✅ Terminated</span>
-          <span>👻 Zombie</span>
+          <span><Icon name="play" size={14} /> Running</span>
+          <span><Icon name="pause" size={14} /> Ready</span>
+          <span><Icon name="hourglass" size={14} /> Waiting</span>
+          <span><Icon name="check" size={14} /> Terminated</span>
+          <span><Icon name="ghost" size={14} /> Zombie</span>
         </div>
       </div>
     </div>

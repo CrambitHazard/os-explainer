@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import ThemeToggle from './components/ThemeToggle'
+import Icon from './components/Icon'
 
 const modules = [
   {
@@ -82,6 +83,38 @@ export default function Home() {
             <p>{module.description}</p>
           </Link>
         ))}
+      </div>
+
+      {/* Full OS Simulator - Special Large Card */}
+      <div className="full-os-card-container">
+        <Link href="/full-os-simulator" className="card full-os-card">
+          <div className="card-number">10</div>
+          <div className="full-os-content">
+            <div className="full-os-text">
+              <h2><Icon name="ai-powered" size={32} /> AI-Powered Full OS Simulator</h2>
+              <p>Experience a complete operating system simulator powered by AI. Describe your tasks in natural language, and watch as the AI decomposes them into subtasks and executes them on a simulated OS environment in real-time.</p>
+              <div className="os-features">
+                <span className="feature-badge">AI Task Decomposition</span>
+                <span className="feature-badge">Real-time Execution</span>
+                <span className="feature-badge">Natural Language Control</span>
+              </div>
+            </div>
+            <div className="full-os-preview">
+              <div className="preview-screen">
+                <div className="preview-header">
+                  <span className="preview-dot"></span>
+                  <span className="preview-dot"></span>
+                  <span className="preview-dot"></span>
+                </div>
+                <div className="preview-content">
+                  <div className="preview-line">$ Simulated OS Terminal</div>
+                  <div className="preview-line">$ AI-powered task execution</div>
+                  <div className="preview-line blink">▊</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
     </>

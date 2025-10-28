@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '../components/ThemeToggle'
+import Icon from '../components/Icon'
 import { AllocationMethod, DiskBlock, FileEntry, DiskMetrics } from './types'
 import { allocateContiguous, deleteContiguous, accessContiguous } from './algorithms/contiguous'
 import { allocateLinked, deleteLinked, accessLinked, calculateSeekTimeLinked } from './algorithms/linked'
@@ -298,13 +299,13 @@ export default function FileSystemManagement() {
 
           <div className="method-description">
             {method === 'contiguous' && (
-              <p>📦 <strong>Contiguous:</strong> Files stored in consecutive blocks. Fast access but causes external fragmentation.</p>
+              <p><Icon name="box" size={18} /> <strong>Contiguous:</strong> Files stored in consecutive blocks. Fast access but causes external fragmentation.</p>
             )}
             {method === 'linked' && (
-              <p>🔗 <strong>Linked:</strong> Files stored as linked list of blocks. No fragmentation but slow random access.</p>
+              <p><Icon name="link" size={18} /> <strong>Linked:</strong> Files stored as linked list of blocks. No fragmentation but slow random access.</p>
             )}
             {method === 'indexed' && (
-              <p>📑 <strong>Indexed:</strong> Uses index block to point to data blocks. Fast random access with overhead.</p>
+              <p><Icon name="index" size={18} /> <strong>Indexed:</strong> Uses index block to point to data blocks. Fast random access with overhead.</p>
             )}
           </div>
         </div>

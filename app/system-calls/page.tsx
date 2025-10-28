@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '../components/ThemeToggle'
+import Icon from '../components/Icon'
 import { Process, SystemCall } from './types'
 import { demoScenarios } from './examples'
 import {
@@ -285,10 +286,10 @@ export default function SystemCalls() {
               </button>
               <div className="time-display">Time: {currentTime.toFixed(1)}s</div>
               <button onClick={executeNextStep} className="btn-step">
-                ▶ Next Step
+                <Icon name="play" size={14} /> Next Step
               </button>
               <button onClick={() => runDemo(currentDemo)} className="btn-reset">
-                🔄 Reset Demo
+                <Icon name="reload" size={14} /> Reset Demo
               </button>
             </div>
 
