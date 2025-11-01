@@ -1,6 +1,7 @@
 'use client'
 
 import { SemaphoreState } from '../types'
+import Icon from '../../components/Icon'
 
 interface Props {
   state: SemaphoreState
@@ -24,7 +25,7 @@ export default function SemaphoreVisualizer({ state }: Props) {
                 key={i} 
                 className={`resource-box ${i < state.value ? 'available' : 'in-use'}`}
               >
-                {i < state.value ? '✓' : '✗'}
+                {i < state.value ? <Icon name="check" size={12} /> : <Icon name="cross" size={12} />}
               </div>
             ))}
           </div>
