@@ -195,6 +195,89 @@ export default function MemorySegmentation() {
           <p>Simulate dynamic partitioning with First-Fit, Best-Fit, and Worst-Fit</p>
         </div>
 
+        {strategy && (
+          <div className="explanation-section">
+            <div className="card strategy-info-card">
+              <h2>
+                {strategy === 'FirstFit' ? 'First-Fit Allocation' :
+                 strategy === 'BestFit' ? 'Best-Fit Allocation' :
+                 'Worst-Fit Allocation'}
+              </h2>
+              <div className="strategy-badge">
+                {strategy === 'FirstFit' ? 'Speed-Optimized Strategy' :
+                 strategy === 'BestFit' ? 'Space-Optimized Strategy' :
+                 'Size-Maximized Strategy'}
+              </div>
+              
+              <div className="card-content">
+                {strategy === 'FirstFit' && (
+                  <div className="strategy-details">
+                    <div className="detail-section">
+                      <h4>How It Works</h4>
+                      <p>Allocate memory in the first available block that is large enough to satisfy the request. Prioritizes speed of allocation over optimal space utilization.</p>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Performance Characteristics</h4>
+                      <ul>
+                        <li><strong>External Fragmentation:</strong> Moderate - creates small holes at memory start</li>
+                        <li><strong>Internal Fragmentation:</strong> Variable - depends on block sizes</li>
+                        <li><strong>Allocation Speed:</strong> Fast - O(n) average case, often much better</li>
+                        <li><strong>Memory Utilization:</strong> Good for large requests, poor for small ones</li>
+                      </ul>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Best Used For</h4>
+                      <p>Real-time applications with timing constraints, or environments where simplicity and predictability are more important than optimal memory usage.</p>
+                    </div>
+                  </div>
+                )}
+                {strategy === 'BestFit' && (
+                  <div className="strategy-details">
+                    <div className="detail-section">
+                      <h4>How It Works</h4>
+                      <p>Find the smallest available block that can accommodate the request, minimizing wasted space within the allocated block (internal fragmentation).</p>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Performance Characteristics</h4>
+                      <ul>
+                        <li><strong>External Fragmentation:</strong> High - creates many tiny unusable holes</li>
+                        <li><strong>Internal Fragmentation:</strong> Low - minimizes waste within blocks</li>
+                        <li><strong>Allocation Speed:</strong> Slow - must examine all free blocks</li>
+                        <li><strong>Memory Utilization:</strong> Excellent per allocation, poor over time</li>
+                      </ul>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Algorithm Process</h4>
+                      <p>Examines all free blocks to find the tightest fit, leaving the smallest possible remainder after allocation.</p>
+                    </div>
+                  </div>
+                )}
+                {strategy === 'WorstFit' && (
+                  <div className="strategy-details">
+                    <div className="detail-section">
+                      <h4>How It Works</h4>
+                      <p>Allocate memory from the largest available block, with the intention of leaving a sizable remainder that might be useful for future allocations.</p>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Performance Characteristics</h4>
+                      <ul>
+                        <li><strong>External Fragmentation:</strong> Severe - wastes large blocks unnecessarily</li>
+                        <li><strong>Internal Fragmentation:</strong> High - poor space utilization</li>
+                        <li><strong>Allocation Speed:</strong> Slow - must find maximum among all blocks</li>
+                        <li><strong>Memory Utilization:</strong> Poor - generally performs worst overall</li>
+                      </ul>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Practical Usage</h4>
+                      <p>Rarely used in practice due to poor performance. Mainly used for theoretical analysis and comparison purposes.</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Control Panel */}
         <div className="control-panel">
           <div className="control-row">
@@ -273,12 +356,51 @@ export default function MemorySegmentation() {
               </button>
             </div>
 
-            <div className="main-layout">
-              <div className="left-panel">
+            {/* Memory Layout Visualization Card */}
+            <div className="card memory-viz-card">
+              <h2>Memory Layout Visualization</h2>
+              <div className="card-content">
+                <div className="memory-explanation">
+                  <h4>Understanding Memory Layout</h4>
+                  <p>This visualization shows how {strategy} allocates segments in memory:</p>
+                  <ul>
+                    <li><strong>Green Blocks:</strong> Free memory available for allocation</li>
+                    <li><strong>Colored Blocks:</strong> Allocated segments (each segment has unique color)</li>
+                    <li><strong>Block Size:</strong> Width represents the size of each memory block</li>
+                    <li><strong>Fragmentation:</strong> Small free blocks show external fragmentation</li>
+                    <li><strong>Memory Addresses:</strong> Numbers show byte positions in memory</li>
+                  </ul>
+                  
+                  <div className="current-stats">
+                    <p><strong>Memory Size:</strong> {memorySize} KB total</p>
+                    <p><strong>Free Space:</strong> {currentMemoryState.freeSpace} KB available</p>
+                    <p><strong>Used Space:</strong> {currentMemoryState.usedSpace} KB allocated</p>
+                    <p><strong>Fragmentation:</strong> {currentMemoryState.fragmentation.toFixed(1)}% external fragmentation</p>
+                  </div>
+                </div>
                 <MemoryVisualizer memoryState={currentMemoryState} />
               </div>
+            </div>
 
-              <div className="right-panel">
+            {/* Segment Queue Card */}
+            <div className="card segments-card">
+              <h2>Segment Allocation Queue</h2>
+              <div className="card-content">
+                <div className="segments-explanation">
+                  <h4>Managing Memory Segments</h4>
+                  <p>This panel controls which segments to allocate and deallocate:</p>
+                  <ul>
+                    <li><strong>Waiting Segments:</strong> Segments ready to be allocated to memory</li>
+                    <li><strong>Allocated Segments:</strong> Segments currently occupying memory blocks</li>
+                    <li><strong>Allocation Strategy:</strong> {strategy} determines where each segment is placed</li>
+                    <li><strong>Deallocation:</strong> Returning memory creates new free blocks</li>
+                    <li><strong>Auto Allocate:</strong> Process all waiting segments using selected strategy</li>
+                  </ul>
+                  
+                  {strategy === 'FirstFit' && <p><strong>First-Fit Process:</strong> Scans from the beginning and allocates to the first suitable block.</p>}
+                  {strategy === 'BestFit' && <p><strong>Best-Fit Process:</strong> Examines all blocks and chooses the smallest suitable one.</p>}
+                  {strategy === 'WorstFit' && <p><strong>Worst-Fit Process:</strong> Examines all blocks and chooses the largest suitable one.</p>}
+                </div>
                 <SegmentQueue 
                   segments={segments}
                   allocatedSegments={allocatedSegments}
@@ -288,9 +410,73 @@ export default function MemorySegmentation() {
               </div>
             </div>
 
-            {metrics && <MetricsDisplay metrics={metrics} strategy={strategy} />}
+            {/* Performance Metrics Card */}
+            {metrics && (
+              <div className="card metrics-card">
+                <h2>Memory Management Performance</h2>
+                <div className="card-content">
+                  <div className="metrics-explanation">
+                    <h4>Performance Analysis</h4>
+                    <div className="metric-definitions">
+                      <div className="metric-item">
+                        <h5>Memory Utilization: {metrics.utilizationRate.toFixed(1)}%</h5>
+                        <p>Percentage of total memory currently allocated to segments. Higher is generally better.</p>
+                      </div>
+                      <div className="metric-item">
+                        <h5>External Fragmentation: {metrics.externalFragmentation.toFixed(1)}%</h5>
+                        <p>Percentage of free memory that cannot be used due to fragmentation. Lower is better.</p>
+                      </div>
+                      <div className="metric-item">
+                        <h5>Number of Holes: {metrics.numberOfHoles}</h5>
+                        <p>Count of separate free memory blocks. Fewer holes indicate less fragmentation.</p>
+                      </div>
+                      <div className="metric-item">
+                        <h5>Largest Free Block: {metrics.largestHole} KB</h5>
+                        <p>Largest contiguous free space available. Important for accommodating large segments.</p>
+                      </div>
+                      <div className="metric-item">
+                        <h5>Allocation Success Rate</h5>
+                        <p>{metrics.successfulAllocations} successful, {metrics.failedAllocations} failed allocations</p>
+                      </div>
+                    </div>
+                    
+                    <div className="strategy-analysis">
+                      <h4>Strategy Analysis</h4>
+                      {strategy === 'FirstFit' && (
+                        <p>First-Fit shows {metrics.externalFragmentation.toFixed(1)}% fragmentation. This is typical as First-Fit tends to create small holes at the beginning of memory over time.</p>
+                      )}
+                      {strategy === 'BestFit' && (
+                        <p>Best-Fit shows {metrics.externalFragmentation.toFixed(1)}% fragmentation with {metrics.numberOfHoles} holes. Best-Fit often creates many small unusable fragments.</p>
+                      )}
+                      {strategy === 'WorstFit' && (
+                        <p>Worst-Fit shows {metrics.externalFragmentation.toFixed(1)}% fragmentation. This strategy often performs poorly with high fragmentation levels.</p>
+                      )}
+                    </div>
+                  </div>
+                  <MetricsDisplay metrics={metrics} strategy={strategy} />
+                </div>
+              </div>
+            )}
             
-            <ActivityLog steps={steps} />
+            {/* Activity Log Card */}
+            <div className="card activity-card">
+              <h2>Memory Activity Log</h2>
+              <div className="card-content">
+                <div className="activity-explanation">
+                  <h4>Understanding the Activity Log</h4>
+                  <p>This chronological log shows every memory management operation:</p>
+                  <ul>
+                    <li><strong>Allocation Events:</strong> When segments are assigned to memory blocks</li>
+                    <li><strong>Deallocation Events:</strong> When segments are removed and blocks are freed</li>
+                    <li><strong>Compaction Events:</strong> When memory is reorganized to reduce fragmentation</li>
+                    <li><strong>Block Merging:</strong> When adjacent free blocks are combined</li>
+                    <li><strong>Failure Events:</strong> When allocation requests cannot be satisfied</li>
+                  </ul>
+                  <p>Each entry shows the operation result and the resulting memory state including fragmentation levels.</p>
+                </div>
+                <ActivityLog steps={steps} />
+              </div>
+            </div>
           </div>
         )}
       </div>

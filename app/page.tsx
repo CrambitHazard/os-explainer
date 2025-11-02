@@ -88,7 +88,7 @@ export default function Home() {
       {/* Full OS Simulator - Special Large Card */}
       <div className="full-os-card-container">
         <Link href="/full-os-simulator" className="card full-os-card">
-          <div className="card-number">10</div>
+          <div className="card-number">7</div>
           <div className="full-os-content">
             <div className="full-os-text">
               <h2><Icon name="ai-powered" size={32} /> AI-Powered Full OS Simulator</h2>

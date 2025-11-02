@@ -127,6 +127,69 @@ export default function Deadlock() {
           <p>Visualize resource allocation graphs and Banker's Algorithm</p>
         </div>
 
+        {method && (
+          <div className="explanation-section">
+            <div className="card method-info-card">
+              <h2>
+                {method === 'rag' ? 'Resource Allocation Graph (RAG)' : 'Banker\'s Algorithm'}
+              </h2>
+              <div className="method-badge">
+                {method === 'rag' ? 'Deadlock Detection Strategy' : 'Deadlock Avoidance Strategy'}
+              </div>
+              
+              <div className="card-content">
+                {method === 'rag' && (
+                  <div className="method-details">
+                    <div className="detail-section">
+                      <h4>How It Works</h4>
+                      <p>A visual representation showing processes, resources, and their relationships through directed edges. Detects deadlocks by finding cycles in the graph structure using depth-first search.</p>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Detection Process</h4>
+                      <ul>
+                        <li>Build resource allocation graph from current system state</li>
+                        <li>Run depth-first search to detect cycles</li>
+                        <li>If cycles exist, deadlock is present</li>
+                        <li>Identify processes involved in the deadlock</li>
+                      </ul>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Graph Components</h4>
+                      <p><strong>Allocation Edges:</strong> From resources to processes (who owns what)</p>
+                      <p><strong>Request Edges:</strong> From processes to resources (who wants what)</p>
+                      <p><strong>Cycles:</strong> Indicate circular waiting - the hallmark of deadlock</p>
+                    </div>
+                  </div>
+                )}
+                {method === 'banker' && (
+                  <div className="method-details">
+                    <div className="detail-section">
+                      <h4>How It Works</h4>
+                      <p>A conservative algorithm that prevents deadlocks by ensuring the system always remains in a "safe state" where all processes can complete execution given available resources.</p>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Safety Algorithm</h4>
+                      <ul>
+                        <li>Find a process that can complete with available resources</li>
+                        <li>Assume it completes and releases all resources</li>
+                        <li>Repeat until all processes can complete (safe) or none can (unsafe)</li>
+                        <li>Only grant requests that leave system in safe state</li>
+                      </ul>
+                    </div>
+                    <div className="detail-section">
+                      <h4>Key Matrices</h4>
+                      <p><strong>Allocation:</strong> Resources currently allocated to each process</p>
+                      <p><strong>Max:</strong> Maximum resources each process may need</p>
+                      <p><strong>Need:</strong> Remaining resources each process requires (Max - Allocation)</p>
+                      <p><strong>Available:</strong> Resources currently available in the system</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Method Selection */}
         <div className="control-panel">
           <div className="control-group">
@@ -195,8 +258,57 @@ export default function Deadlock() {
                 Load New Scenario
               </button>
             </div>
-            <RAGVisualizer state={ragState} />
-            <LogDisplay log={ragState.log} />
+
+            {/* RAG Analysis Card */}
+            <div className="card analysis-card">
+              <h2>Deadlock Analysis Results</h2>
+              <div className="card-content">
+                <div className="analysis-content">
+                  <p><strong>Detection Status:</strong> {ragState.hasDeadlock ? 'Deadlock Detected!' : 'No Deadlock Found'}</p>
+                  {ragState.hasDeadlock && (
+                    <p><strong>Cycles Found:</strong> {ragState.cycles.length} circular wait condition(s) detected in the resource allocation graph.</p>
+                  )}
+                  {ragState.cycles.length > 0 && (
+                    <p><strong>Affected Processes:</strong> The deadlock involves processes that are waiting for resources held by each other, creating an unresolvable circular dependency.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* RAG Visualization Card */}
+            <div className="card rag-viz-card">
+              <h2>Resource Allocation Graph</h2>
+              <div className="card-content">
+                <div className="rag-explanation">
+                  <h4>Reading the Graph</h4>
+                  <ul>
+                    <li><strong>Rectangles:</strong> Represent resources in the system</li>
+                    <li><strong>Circles:</strong> Represent processes in the system</li>
+                    <li><strong>Solid Arrows:</strong> Allocation edges (resource → process) showing ownership</li>
+                    <li><strong>Dashed Arrows:</strong> Request edges (process → resource) showing waiting</li>
+                    <li><strong>Cycles:</strong> Circular paths indicate deadlock conditions</li>
+                  </ul>
+                </div>
+                <RAGVisualizer state={ragState} />
+              </div>
+            </div>
+
+            {/* Detection Log Card */}
+            <div className="card log-card">
+              <h2>Detection Analysis Log</h2>
+              <div className="card-content">
+                <div className="log-explanation">
+                  <h4>Understanding the Analysis</h4>
+                  <p>This log shows the step-by-step deadlock detection process:</p>
+                  <ul>
+                    <li><strong>Graph Construction:</strong> Building edges from current allocations and requests</li>
+                    <li><strong>Cycle Detection:</strong> Using depth-first search to find circular dependencies</li>
+                    <li><strong>Result Analysis:</strong> Determining if deadlock exists and which processes are involved</li>
+                  </ul>
+                </div>
+                <LogDisplay log={ragState.log} />
+              </div>
+            </div>
           </div>
         )}
 
@@ -219,13 +331,75 @@ export default function Deadlock() {
               </div>
             )}
 
-            <BankerVisualizer state={bankerState} />
-            
+            {/* Safety Analysis Card */}
+            <div className="card analysis-card">
+              <h2>Safety Analysis Results</h2>
+              <div className="card-content">
+                <div className="analysis-content">
+                  <p><strong>System State:</strong> {bankerState.isSafe ? 'Safe State' : 'Unsafe State'}</p>
+                  {bankerState.isSafe && bankerState.safeSequence.length > 0 && (
+                    <p><strong>Safe Sequence:</strong> P{bankerState.safeSequence.join(' → P')} - This execution order guarantees all processes can complete.</p>
+                  )}
+                  <p><strong>Available Resources:</strong> {bankerState.available.join(', ')} units currently available for allocation.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Banker State Visualization Card */}
+            <div className="card banker-viz-card">
+              <h2>System Resource State</h2>
+              <div className="card-content">
+                <div className="banker-explanation">
+                  <h4>Understanding the Matrices</h4>
+                  <ul>
+                    <li><strong>Allocation Matrix:</strong> Resources currently allocated to each process</li>
+                    <li><strong>Max Matrix:</strong> Maximum resources each process may request</li>
+                    <li><strong>Need Matrix:</strong> Remaining resources each process requires (Max - Allocation)</li>
+                    <li><strong>Available Vector:</strong> Resources currently available in the system</li>
+                    <li><strong>Safe Sequence:</strong> Order in which processes can execute safely</li>
+                  </ul>
+                </div>
+                <BankerVisualizer state={bankerState} />
+              </div>
+            </div>
+
+            {/* Resource Request Card */}
             {bankerState.isSafe && (
-              <RequestForm state={bankerState} onRequest={handleResourceRequest} />
+              <div className="card request-card">
+                <h2>Test Resource Requests</h2>
+                <div className="card-content">
+                  <div className="request-explanation">
+                    <h4>Making Resource Requests</h4>
+                    <p>Test how the Banker's Algorithm handles resource requests:</p>
+                    <ul>
+                      <li>Select a process and specify resource amounts to request</li>
+                      <li>The algorithm will check if granting the request keeps the system safe</li>
+                      <li>If safe, the request is granted and matrices are updated</li>
+                      <li>If unsafe, the request is denied to prevent potential deadlock</li>
+                    </ul>
+                  </div>
+                  <RequestForm state={bankerState} onRequest={handleResourceRequest} />
+                </div>
+              </div>
             )}
-            
-            <LogDisplay log={bankerState.log} />
+
+            {/* Execution Log Card */}
+            <div className="card log-card">
+              <h2>Safety Algorithm Log</h2>
+              <div className="card-content">
+                <div className="log-explanation">
+                  <h4>Following the Safety Check</h4>
+                  <p>This log shows the safety algorithm execution:</p>
+                  <ul>
+                    <li><strong>Process Selection:</strong> Finding processes that can complete with available resources</li>
+                    <li><strong>Resource Release:</strong> Simulating completion and resource return</li>
+                    <li><strong>State Updates:</strong> Updating available resources after each completion</li>
+                    <li><strong>Sequence Building:</strong> Constructing the safe execution sequence</li>
+                  </ul>
+                </div>
+                <LogDisplay log={bankerState.log} />
+              </div>
+            </div>
           </div>
         )}
 
