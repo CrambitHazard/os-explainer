@@ -344,14 +344,14 @@ export default function ProcessSynchronization() {
                 {mechanism === 'semaphore' && semaphoreState && (
                   <div className="analysis-content">
                     <p><strong>Current State:</strong> 
-                    Semaphore value is {semaphoreState.semaphoreValue}. 
-                    {semaphoreState.semaphoreValue > 0 ? 
-                      `${semaphoreState.semaphoreValue} thread(s) can still acquire resources.` : 
+                    Semaphore value is {semaphoreState?.semaphoreValue ?? 0}. 
+                    {(semaphoreState?.semaphoreValue ?? 0) > 0 ? 
+                      `${semaphoreState?.semaphoreValue ?? 0} thread(s) can still acquire resources.` : 
                       'Resource is fully utilized - threads must wait for someone to release.'}
                     </p>
                     <p><strong>Queue Status:</strong> 
-                    {semaphoreState.waitingQueue.length > 0 ? 
-                      `${semaphoreState.waitingQueue.length} threads waiting in FIFO queue. First one in line gets the next available resource.` :
+                    {(semaphoreState?.waitingQueue?.length ?? 0) > 0 ? 
+                      `${semaphoreState?.waitingQueue?.length ?? 0} threads waiting in FIFO queue. First one in line gets the next available resource.` :
                       'No queue currently - all threads can proceed or are working.'}</p>
                   </div>
                 )}
@@ -418,7 +418,7 @@ export default function ProcessSynchronization() {
                   <div className="semaphore-explanation">
                     <h4>Semaphore Components</h4>
                     <ul>
-                      <li><strong>Counter Value:</strong> Number of available resources (current: {semaphoreState.semaphoreValue})</li>
+                      <li><strong>Counter Value:</strong> Number of available resources (current: {semaphoreState?.semaphoreValue ?? 0})</li>
                       <li><strong>Waiting Queue:</strong> Threads blocked waiting for resources</li>
                       <li><strong>wait() Operation:</strong> Decrements counter, blocks if negative</li>
                       <li><strong>signal() Operation:</strong> Increments counter, wakes waiting thread</li>
